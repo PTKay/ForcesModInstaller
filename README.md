@@ -5,6 +5,8 @@ of wars_patch.cpk (or other cpk's if specified by the mod) for you!
 
 It comes with a simple command line GUI-like interface that the end user can understand easily. It also automaticaly backups your original cpk file aswell, so no worries about corrupting your game files!
 
+
+## FAQ
 - How do I use this?
 
 Put your mods in the mod folder (SonicForces/mods), and they'll be ready for instalation.
