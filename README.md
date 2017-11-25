@@ -10,7 +10,7 @@ In any case, if HedgeModManager isn't working, you can use this mod installer
 
 
 ## FAQ
-- How do I use this?
+- *How do I use this?*
 
 Put your mods in the mod folder (SonicForces/mods), and they'll be ready for instalation.
 
@@ -18,7 +18,7 @@ If you want, you can also drag and drop the mod's folder into the program (or st
 install a mod automatically!
 
 
-- How do I make my mod compatible with Forces Mod Installer?
+- *How do I make my mod compatible with Forces Mod Installer?*
 
 It's simple. Set up your mod like this:
 ```
@@ -45,7 +45,7 @@ custominstallbat=
 ```
 The Main part isn't used, but that makes your mod compatible with other mod loaders in the future.
 
-From Sonic_FMI onward, you ABSOLUTELY NEED to add everything, otherwise the installer will crash.
+From Sonic_FMI onward, you **ABSOLUTELY NEED** to add everything, otherwise the installer will crash.
 You can specify custom CPK instalation by inserting the CPK name in "cpk=". Most of the times you'll want
 to use wars_patch, so do that.
 
