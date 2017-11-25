@@ -31,8 +31,10 @@ custominstall=false
 custominstallbat=
 ```
 The Main part isn't used, but that makes your mod compatible with other mod loaders in the future.
+
 You can specify custom CPK instalation by inserting the CPK name in "cpk=". Most of the times you'll want
 to use wars_patch, so do that.
+
 You can also specify custom instalation bats after that. Be careful while doing this, because you need to
 type the whole instalation process on your bat!
 
