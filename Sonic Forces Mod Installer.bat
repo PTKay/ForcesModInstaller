@@ -108,7 +108,7 @@ echo IF THIS LOOKS STUCK, DON'T DO ANYTHING! IT ISN'T!
 )
 echo --------------------------
 echo Copying files...
-xcopy /s /y "%~1\%cpk%" ".\image\x64\disk\mod_installer\wars_modinstaller_%cpk%" >nul
+xcopy /s /y "%~1\disk\%cpk%" ".\image\x64\disk\mod_installer\wars_modinstaller_%cpk%" >nul
 echo --------------------------
 echo IF THIS LOOKS STUCK, DON'T DO ANYTHING! IT ISN'T!
 PackCPK ".\image\x64\disk\mod_installer\wars_modinstaller_%cpk%" ".\image\x64\disk\%cpk%"
@@ -214,7 +214,7 @@ if not exist "image\x64\disk\mod_installer\wars_modinstaller_%cpk%" (
 )
 echo --------------------------
 echo Copying files...
-xcopy /s /y "mods\%modfoldernormal%\%cpk%" ".\image\x64\disk\mod_installer\wars_modinstaller_%cpk%" >nul
+xcopy /s /y "mods\%modfoldernormal%\disk\%cpk%" ".\image\x64\disk\mod_installer\wars_modinstaller_%cpk%" >nul
 echo --------------------------
 echo IF THIS LOOKS STUCK, DON'T DO ANYTHING! IT ISN'T!
 PackCPK ".\image\x64\disk\mod_installer\wars_modinstaller_%cpk%" ".\image\x64\disk\%cpk%"
