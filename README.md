@@ -11,6 +11,7 @@ In any case, if HedgeModManager isn't working, you can use this mod installer
 
 ## FAQ
 - *How do I use this?*
+
 Watch this for a video tutorial: https://www.youtube.com/watch?v=VsGYZ-UmM6Q
 
 In any case, put your mods in the mod folder (SonicForces/mods), and they'll be ready for instalation.
