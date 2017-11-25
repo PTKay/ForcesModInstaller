@@ -48,5 +48,5 @@ to use wars_patch, so do that.
 You can also specify custom instalation bats after that. Be careful while doing this, because you need to
 type the whole instalation process on your bat!
 
-Credits:
+## Credits
 - PackCPK.exe by Skyth
