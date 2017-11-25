@@ -19,9 +19,12 @@ If you want, you can also drag and drop the mod's folder into the program (or st
 install a mod automatically!
 
 
-- *How do I make my mod compatible with Forces Mod Installer?*
+- *How do I make my mods compatible with Forces Mod Installer?*
 
-It's simple. Set up your mod like this:
+If they were already compatible with HedgeModManager, then you just need to add some extra stuff to mod.ini.
+Check how it is set up below.
+
+If you're making a mod, then it's simple. Set up your mod like this:
 ```
 modfolder\disk\%thecpk%\%modfilesgohere%
 modfolder\mod.ini
