@@ -46,7 +46,7 @@ custominstallbat=
 The Main part isn't used, but that makes your mod compatible with other mod loaders in the future.
 
 From Sonic_FMI onward, you **ABSOLUTELY NEED** to add everything, otherwise the installer will crash.
-You can specify custom CPK instalation by inserting the CPK name in "cpk=". Most of the times you'll want
+You can specify custom CPK installation by inserting the CPK name in "cpk=". Most of the times you'll want
 to use wars_patch, so do that.
 
 You can also specify custom instalation bats after that. Be careful while doing this, because you need to
