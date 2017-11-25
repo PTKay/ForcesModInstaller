@@ -5,6 +5,9 @@ of wars_patch.cpk (or other cpk's if specified by the mod) for you!
 
 It comes with a simple command line GUI-like interface that the end user can understand easily. It also automaticaly backups your original cpk file aswell, so no worries about corrupting your game files!
 
+NOTE: Use this only as a second option, since HedgeModManager is always your best bet for loading mods into the game.
+In any case, if HedgeModManager isn't working, you can use this mod installer
+
 
 ## FAQ
 - How do I use this?
