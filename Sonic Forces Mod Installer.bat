@@ -1,8 +1,8 @@
 @echo off
-title Sonic Forces Mod Installer v1.5
+title Sonic Forces Mod Installer v1.5.1
 for %%* in (.) do set foldercheck=%%~nx*
 set cpk=wars_patch
-set fmiver=1.5
+set fmiver=1.5.1
 
 if /I %foldercheck% NEQ SonicForces (
   echo ERROR
@@ -27,10 +27,6 @@ if not exist "CpkMaker.dll" (
   echo Could not find CpkMaker.dll!
   pause >nul
   exit
-)
-
-if not exist "mods\modsdb.ini" (
-  echo. > mods\modsdb.ini
 )
 
 md mods
@@ -119,6 +115,9 @@ pause >nul
 exit
 
 :normal
+md mods
+md .\image\x64\disk\mod_installer\
+echo Do not delete these folders! These serve as cache for the mod installer! > .\image\x64\disk\mod_installer\readme.txt
 cls
 if not exist "mods" (md mods)
 echo Type the mod folder to install that mod
@@ -236,7 +235,11 @@ exit
 cls
 echo Currently installed mods:
 echo ---------
-type mods\ModsDB.ini
+if not exist "mods\modsdb.ini" (
+  echo No mods are currently installed
+) else (
+type mods\modsdb.ini
+)
 echo ---------
 echo Press any key to go back to the menu...
 pause >nul
@@ -246,7 +249,11 @@ goto normal
 cls
 echo Currently installed mods:
 echo ---------
-type mods\ModsDB.ini
+if not exist "mods\modsdb.ini" (
+  echo No mods are currently installed
+) else (
+type mods\modsdb.ini
+)
 echo ---------
 echo This will uninstall all of your currently installed mods
 set /p answer=Proceed (Y/N): 
@@ -267,7 +274,7 @@ del image\x64\disk\wars_patch.cpk
 ren image\x64\disk\wars_patch.cpk.backup wars_patch.cpk
 del /q "image\x64\disk\mod_installer\*"
 FOR /D %%p IN ("image\x64\disk\mod_installer\*.*") DO rmdir "%%p" /s /q
-echo. > mods\modsdb.ini
+del /q mods\modsdb.ini
 echo.
 echo Done! Press any key to go back to the menu
 pause >nul
