@@ -38,13 +38,14 @@ Version="Your version"
 Date="Date here"
 Author="Your name goes here"
 
-
+[Sonic_FMI]
 cpk=wars_patch
 custominstall=false
 custominstallbat=
 ```
 The Main part isn't used, but that makes your mod compatible with other mod loaders in the future.
 
+From Sonic_FMI onward, you ABSOLUTELY NEED to add everything, otherwise the installer will crash.
 You can specify custom CPK instalation by inserting the CPK name in "cpk=". Most of the times you'll want
 to use wars_patch, so do that.
 
