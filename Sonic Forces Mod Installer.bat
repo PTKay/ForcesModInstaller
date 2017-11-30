@@ -1,8 +1,8 @@
 @echo off
-title Sonic Forces Mod Installer v1.5.3
+title Sonic Forces Mod Installer v1.5.5
 for %%* in (.) do set foldercheck=%%~nx*
 set cpk=wars_patch
-set fmiver=1.5.3
+set fmiver=1.5.5
 
 if /I %foldercheck% NEQ SonicForces (
   echo ERROR
