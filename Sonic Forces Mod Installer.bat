@@ -1,8 +1,8 @@
 @echo off
-title Sonic Forces Mod Installer v1.5.2
+title Sonic Forces Mod Installer v1.5.3
 for %%* in (.) do set foldercheck=%%~nx*
 set cpk=wars_patch
-set fmiver=1.5.2
+set fmiver=1.5.3
 
 if /I %foldercheck% NEQ SonicForces (
   echo ERROR
@@ -25,9 +25,13 @@ if not exist "CpkMaker.dll" (
   echo ERROR
   echo.
   echo Could not find CpkMaker.dll!
+  echo Please get CpkMaker.dll from this archive and extract it to the this folder:
+  echo https://goo.gl/8Gs5jx
   pause >nul
   exit
 )
+
+if "%~1" EQU "" goto normal
 
 md mods
 md .\image\x64\disk\mod_installer\
@@ -35,11 +39,6 @@ echo Do not delete these folders! These serve as cache for the mod installer! > 
 cls
 
 :dragdrop
-  if "%~1" EQU "" (goto normal)
-  for /f "tokens=1,2 delims==" %%a in (%~1\mod.ini) do (
-  if /I %%a==title set title=%%b
-)
-
 if not exist %~1\mod.ini (
   cls
   echo Not a valid mod folder.
@@ -48,22 +47,32 @@ if not exist %~1\mod.ini (
   exit
 )
 
-  for /f "tokens=1,2 delims==" %%a in (%~1\mod.ini) do (
+if exist (%~1\sfmi.ini) (
+  for /f "tokens=1,2 delims==" %%a in (%~1\sfmi.ini) do (
   if /I %%a==cpk set cpk=%%b
 )
 
-  for /f "tokens=1,2 delims==" %%a in (%~1\mod.ini) do (
+  for /f "tokens=1,2 delims==" %%a in (%~1\sfmi.ini) do (
   if /I %%a==custominstall set custom=%%b
 )
 
-  for /f "tokens=1,2 delims==" %%a in (%~1\mod.ini) do (
+  for /f "tokens=1,2 delims==" %%a in (%~1\sfmi.ini) do (
   if /I %%a==custominstallbat set custombat=%%b
+)
+) else (
+set cpk=wars_patch
+set custominstall=false
+set custominstallbat=
+)
+
+  if "%~1" EQU "" (goto normal)
+  for /f "tokens=1,2 delims==" %%a in (%~1\mod.ini) do (
+  if /I %%a==title set title=%%b
 )
   
   for /f "tokens=1,2 delims==" %%a in (%~1\mod.ini) do (
   if /I %%a==author set author=%%b
 )
-
 
   echo Do you want to install %title% by %author%?
   echo (Installs to %cpk%)
@@ -136,20 +145,29 @@ if /i %modfoldernormal% EQU delete goto uninstall
 if /i %modfoldernormal% EQU refresh goto normal
 if /i %modfoldernormal% EQU check goto check
 
+
+if exist (mods\%modfoldernormal%\sfmi.ini) (
+  for /f "tokens=1,2 delims==" %%a in (mods\%modfoldernormal%\sfmi.ini) do (
+  if /I %%a==cpk set cpk=%%b
+)
+
+  for /f "tokens=1,2 delims==" %%a in (mods\%modfoldernormal%\sfmi.ini) do (
+  if /I %%a==custominstall set custom=%%b
+)
+
+  for /f "tokens=1,2 delims==" %%a in (mods\%modfoldernormal%\sfmi.ini) do (
+  if /I %%a==custominstallbat set custombat=%%b
+) else (
+set cpk=wars_patch
+set custominstall=false
+set custominstallbat=
+)
+
+
   for /f "tokens=1,2 delims==" %%a in (mods\%modfoldernormal%\mod.ini) do (
   if /I %%a==title set title=%%b
 )
 
-  for /f "tokens=1,2 delims==" %%a in (mods\%modfoldernormal%\mod.ini) do (
-  if /I %%a==cpk set cpk=%%b
-)
-
-  for /f "tokens=1,2 delims==" %%a in (mods\%modfoldernormal%\mod.ini) do (
-  if /I %%a==custominstall set custom=%%b
-)
-
-  for /f "tokens=1,2 delims==" %%a in (mods\%modfoldernormal%\mod.ini) do (
-  if /I %%a==custominstallbat set custombat=%%b
 )
   for /f "tokens=1,2 delims==" %%a in (mods\%modfoldernormal%\mod.ini) do (
   if /I %%a==author set author=%%b
