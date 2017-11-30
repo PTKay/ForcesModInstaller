@@ -21,10 +21,9 @@ install a mod automatically!
 
 - *How do I make my mods compatible with Forces Mod Installer?*
 
-If they were already compatible with HedgeModManager, then you just need to add some extra stuff to mod.ini.
-Check how it is set up below.
+If they were already compatible with HedgeModManager, then your mods are already fully compatible with the installer!
 
-If you're making a mod, then it's simple. Set up your mod like this:
+If you're making a mod from scratch, then it's simple. Set up your mod like this:
 ```
 modfolder\disk\%thecpk%\%modfilesgohere%
 modfolder\mod.ini
@@ -41,19 +40,13 @@ Title="Mod's Name"
 Version="Your version"
 Date="Date here"
 Author="Your name goes here"
-
-[Sonic_FMI]
-cpk=wars_patch
-custominstall=false
-custominstallbat=
 ```
-The Main part isn't used, but that makes your mod compatible with other mod loaders in the future.
+The Main part isn't used, but that makes your mod compatible with other mod loaders (HedgeModManager).
 
-From Sonic_FMI onward, you **ABSOLUTELY NEED** to add everything, otherwise the installer will crash.
-You can specify custom CPK installation by inserting the CPK name in "cpk=". Most of the times you'll want
-to use wars_patch, so do that.
-
-You can also specify custom instalation bats after that. Be careful while doing this, because you need to
+You can create a separate file called "sfmi.ini" alongside "mod.ini" with the following parameters:
+"cpk=": Specify a custom CPK to install to by inserting the CPK name in "cpk=".
+"custominstall=": Can be True of False, depending if you specify a custom instalation bat or not.
+"custominstallbat=": Location of the custom instalation bat inside the mod's directory. Be careful while doing this, because you need to
 type the whole instalation process on your bat!
 
 ## Credits
