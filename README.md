@@ -44,8 +44,11 @@ Author="Your name goes here"
 The Main part isn't used, but that makes your mod compatible with other mod loaders (HedgeModManager).
 
 You can create a separate file called "sfmi.ini" alongside "mod.ini" with the following parameters:
+
 "cpk=": Specify a custom CPK to install to by inserting the CPK name in "cpk=".
+
 "custominstall=": Can be True of False, depending if you specify a custom instalation bat or not.
+
 "custominstallbat=": Location of the custom instalation bat inside the mod's directory. Be careful while doing this, because you need to
 type the whole instalation process on your bat!
 
