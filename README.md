@@ -47,9 +47,9 @@ You can create a separate file called "sfmi.ini" alongside "mod.ini" with the fo
 
 - "CPK=": Specify a custom CPK to install to by inserting the CPK name in "cpk=".
 
-- "CustomInstall=": Can be True of False, depending if you specify a custom instalation bat or not.
+- "CustomInstall=": Can be True of False, depending if you specify a custom installation bat or not.
 
-- "CustomInstallBAT=": Location of the custom instalation bat inside the mod's directory. Be careful while doing this, because you need to type the whole instalation process on your bat!
+- "CustomInstallBAT=": Location of the custom installation bat inside the mod's directory. Be careful while doing this, because you need to type the whole instalation process on your bat!
 
 ## Credits
 - PackCPK.exe by Skyth
