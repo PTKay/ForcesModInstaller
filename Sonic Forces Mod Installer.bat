@@ -1,12 +1,11 @@
 @echo off
-title Sonic Forces Mod Installer v1.5.5
+title Sonic Forces Mod Installer v1.6
 for %%* in (.) do set foldercheck=%%~nx*
-set cpk=wars_patch
-set fmiver=1.5.5
+set fmiver=1.6
 
 if /I %foldercheck% NEQ SonicForces (
   echo ERROR
-  echo.
+  echo ----------
   echo This bat file/mod folder isn't in the SonicForces folder.
   echo Please put this file/folder in the SonicForces folder and try again.
   pause >nul
@@ -15,7 +14,7 @@ if /I %foldercheck% NEQ SonicForces (
 
 if not exist "PackCPK.exe" (
   echo ERROR
-  echo.
+  echo ----------
   echo Could not find PackCPK.exe!
   pause >nul
   exit
@@ -23,12 +22,23 @@ if not exist "PackCPK.exe" (
 
 if not exist "CpkMaker.dll" (
   echo ERROR
-  echo.
+  echo ----------
   echo Could not find CpkMaker.dll!
   echo Please get CpkMaker.dll from this archive and extract it to the this folder:
   echo https://goo.gl/8Gs5jx
   pause >nul
   exit
+)
+
+if exist ".\build\main\projects\exec\d3d11.dll" if exist ".\build\main\projects\exec\HedgeModManager.exe" (
+  echo WARNING
+  echo ----------
+  echo An instalation of the HedgeModManager code loader 
+  echo was detected. Please uninstall the code loader 
+  echo to avoid conflicts. 
+  echo. 
+  echo Press any key to proceed anyway 
+  pause >nul
 )
 
 if "%~1" EQU "" goto normal
@@ -61,8 +71,8 @@ if exist (%~1\sfmi.ini) (
 )
 ) else (
 set cpk=wars_patch
-set custominstall=false
-set custominstallbat=
+set custom=false
+set custombat=
 )
 
   if "%~1" EQU "" (goto normal)
@@ -78,11 +88,8 @@ set custominstallbat=
   echo (Installs to %cpk%)
   echo.
   set /p confirm=(Y/N)
-  if %confirm% EQU Y goto install
-  if %confirm% EQU y goto install
-  if %confirm% EQU N goto end
-  if %confirm% EQU n goto end
-) 
+  if /i %confirm% EQU y goto install
+  if /i %confirm% EQU n goto end
 
 :install
 echo --------------------------
@@ -134,9 +141,12 @@ echo Type "delete" to uninstall all currently installed mods
 echo Type "refresh" to refresh the mod list
 echo Type "check" to check currently installer mods
 echo.
-echo Mod folders available in the "mods" folder
+echo Mods available in the "mods" folder
 echo ------------------------------------
-dir .\mods /ad /b
+::dir .\mods /ad /b
+cd mods
+for /r %%a in (.) do @if exist "%%~fa\mod.ini" echo %%~nxa
+cd ..
 echo ------------------------------------
 echo.
 set /p modfoldernormal=Mod folder: 
@@ -157,10 +167,11 @@ if exist (mods\%modfoldernormal%\sfmi.ini) (
 
   for /f "tokens=1,2 delims==" %%a in (mods\%modfoldernormal%\sfmi.ini) do (
   if /I %%a==custominstallbat set custombat=%%b
+)
 ) else (
 set cpk=wars_patch
-set custominstall=false
-set custominstallbat=
+set custom=false
+set custombat=
 )
 
 
@@ -191,16 +202,14 @@ if not exist mods\%modfoldernormal%\mod.ini (
   goto normal
 )
 
+
 cls
 echo Do you want to install %title% by %author%?
 echo (Installs to "%cpk%")
 echo.
 set /p confirm=(Y/N)
-if %confirm% EQU Y goto installnormal
-if %confirm% EQU y goto installnormal
-if %confirm% EQU N goto normal
-if %confirm% EQU n goto normal
-goto :confirmnormal
+if /i %confirm% EQU Y goto installnormal
+if /i %confirm% EQU n goto normal
 
 :installnormal
 echo --------------------------
