@@ -1,8 +1,10 @@
 @echo off
-title Sonic Forces Mod Installer v1.6
+title Sonic Forces Mod Installer v1.6.1
 for %%* in (.) do set foldercheck=%%~nx*
-set fmiver=1.6
+set fmiver=1.6.1
 
+
+::Game Root Folder Mode
 if /I %foldercheck% NEQ SonicForces (
   echo ERROR
   echo ----------
@@ -41,12 +43,16 @@ if exist ".\build\main\projects\exec\d3d11.dll" if exist ".\build\main\projects\
   pause >nul
 )
 
-if "%~1" EQU "" goto normal
-
 md mods
 md .\image\x64\disk\mod_installer\
 echo Do not delete these folders! These serve as cache for the mod installer! > .\image\x64\disk\mod_installer\readme.txt
+if not exist ".\build\main\projects\exec\CpkMaker.dll" (
+xcopy /y "CpkMaker.dll" ".\build\main\projects\exec\"
+)
 cls
+
+if "%~1" EQU "" goto normal
+
 
 :dragdrop
 if not exist %~1\mod.ini (
