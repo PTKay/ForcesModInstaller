@@ -1,20 +1,36 @@
 @echo off
-title Sonic Forces Mod Installer v1.6.1
 for %%* in (.) do set foldercheck=%%~nx*
-set fmiver=1.6.1
+set fmiver=1.7
+title Sonic Forces Mod Installer %fmiver%
 
-
-::Game Root Folder Mode
-if /I %foldercheck% NEQ SonicForces (
+if /I %foldercheck% EQU SonicForces goto rootfolder
+if /I %foldercheck% EQU exec goto execfolder
+if /I %foldercheck% NEQ SonicForces if /I %foldercheck% NEQ SonicForces (
   echo ERROR
   echo ----------
-  echo This bat file/mod folder isn't in the SonicForces folder.
-  echo Please put this file/folder in the SonicForces folder and try again.
+  echo This bat file/mod folder isn't in a compatible folder.
+  echo Please put this file/folder in the SonicForces or the exec folder and try again.
   pause >nul
   exit
 )
 
-if not exist "PackCPK.exe" (
+:execfolder
+cd ..
+cd ..
+cd ..
+cd ..
+title Sonic Forces Mod Installer %fmiver% (Exec Folder Mode)
+set worklocation=.\build\main\projects\exec\
+goto fmibegin
+
+::Game Root Folder Mode
+:rootfolder
+set worklocation=
+title Sonic Forces Mod Installer %fmiver% (Root Folder Mode)
+goto fmibegin
+
+:fmibegin
+if not exist "%worklocation%PackCPK.exe" (
   echo ERROR
   echo ----------
   echo Could not find PackCPK.exe!
@@ -22,7 +38,7 @@ if not exist "PackCPK.exe" (
   exit
 )
 
-if not exist "CpkMaker.dll" (
+if not exist "%worklocation%CpkMaker.dll" (
   echo ERROR
   echo ----------
   echo Could not find CpkMaker.dll!
@@ -43,10 +59,10 @@ if exist ".\build\main\projects\exec\d3d11.dll" if exist ".\build\main\projects\
   pause >nul
 )
 
-md mods
+md %worklocation%mods
 md .\image\x64\disk\mod_installer\
 echo Do not delete these folders! These serve as cache for the mod installer! > .\image\x64\disk\mod_installer\readme.txt
-if not exist ".\build\main\projects\exec\CpkMaker.dll" (
+if not exist ".\build\main\projects\exec\CpkMaker.dll" if exist ".\build\main\projects\exec\HedgeModManager.exe" (
 xcopy /y "CpkMaker.dll" ".\build\main\projects\exec\"
 )
 cls
@@ -90,6 +106,9 @@ set custombat=
   if /I %%a==author set author=%%b
 )
 
+  if exist "%~1/disk/*.cpk"
+
+
   echo Do you want to install %title% by %author%?
   echo (Installs to %cpk%)
   echo.
@@ -116,9 +135,35 @@ if /I %custom% EQU true (
   )
 
 echo --------------------------
+if exist "%~1\disk\*.cpk" (
+echo CPK mod detected. Extracting files...
+for %%x in (%~1\disk\*.cpk) do (
+  set "cpkinstallation=%%x"
+  goto CPKProceedDD
+)
+:CPKProceedDD
+%worklocation%packcpk %cpkinstallation%
 echo IF THIS LOOKS STUCK, DON'T DO ANYTHING! IT ISN'T!
   if not exist "image\x64\disk\mod_installer\wars_modinstaller_%cpk%" (
-  packcpk ".\image\x64\disk\%cpk%.cpk"
+  %worklocation%packcpk ".\image\x64\disk\%cpk%.cpk"
+  rename %cpk% wars_modinstaller_%cpk%
+  move wars_modinstaller_%cpk% ".\image\x64\disk\mod_installer\" >nul
+) else (
+  echo Extracted files already found, skipping extraction...
+)
+echo --------------------------
+echo IF THIS LOOKS STUCK, DON'T DO ANYTHING! IT ISN'T!
+%worklocation%PackCPK ".\image\x64\disk\mod_installer\wars_modinstaller_%cpk%" ".\image\x64\disk\%cpk%"
+echo --------------------------
+echo %title% >> mods\SFMIModsDB.ini
+echo Done! Press any key to exit!
+pause >nul
+exit
+)
+
+echo IF THIS LOOKS STUCK, DON'T DO ANYTHING! IT ISN'T!
+  if not exist "image\x64\disk\mod_installer\wars_modinstaller_%cpk%" (
+  %worklocation%packcpk ".\image\x64\disk\%cpk%.cpk"
   rename %cpk% wars_modinstaller_%cpk%
   move wars_modinstaller_%cpk% ".\image\x64\disk\mod_installer\" >nul
 ) else (
@@ -129,15 +174,15 @@ echo Copying files...
 xcopy /s /y "%~1\disk\%cpk%" ".\image\x64\disk\mod_installer\wars_modinstaller_%cpk%" >nul
 echo --------------------------
 echo IF THIS LOOKS STUCK, DON'T DO ANYTHING! IT ISN'T!
-PackCPK ".\image\x64\disk\mod_installer\wars_modinstaller_%cpk%" ".\image\x64\disk\%cpk%"
+%worklocation%PackCPK ".\image\x64\disk\mod_installer\wars_modinstaller_%cpk%" ".\image\x64\disk\%cpk%"
 echo --------------------------
-echo %title% >> mods\ModsDB.ini
+echo %title% >> mods\SFMIModsDB.ini
 echo Done! Press any key to exit!
 pause >nul
 exit
 
 :normal
-md mods
+md %worklocation%mods
 md .\image\x64\disk\mod_installer\
 echo Do not delete these folders! These serve as cache for the mod installer! > .\image\x64\disk\mod_installer\readme.txt
 cls
@@ -150,9 +195,20 @@ echo.
 echo Mods available in the "mods" folder
 echo ------------------------------------
 ::dir .\mods /ad /b
+if /i %foldercheck% equ SonicForces (
 cd mods
 for /r %%a in (.) do @if exist "%%~fa\mod.ini" echo %%~nxa
 cd ..
+)
+if /i %foldercheck% equ exec (
+cd %worklocation%mods
+for /r %%a in (.) do @if exist "%%~fa\mod.ini" echo %%~nxa
+cd ..
+cd ..
+cd ..
+cd ..
+cd ..
+)
 echo ------------------------------------
 echo.
 set /p modfoldernormal=Mod folder: 
@@ -162,16 +218,16 @@ if /i %modfoldernormal% EQU refresh goto normal
 if /i %modfoldernormal% EQU check goto check
 
 
-if exist (mods\%modfoldernormal%\sfmi.ini) (
+if exist (%worklocation%mods\%modfoldernormal%\sfmi.ini) (
   for /f "tokens=1,2 delims==" %%a in (mods\%modfoldernormal%\sfmi.ini) do (
   if /I %%a==cpk set cpk=%%b
 )
 
-  for /f "tokens=1,2 delims==" %%a in (mods\%modfoldernormal%\sfmi.ini) do (
+  for /f "tokens=1,2 delims==" %%a in (%worklocation%mods\%modfoldernormal%\sfmi.ini) do (
   if /I %%a==custominstall set custom=%%b
 )
 
-  for /f "tokens=1,2 delims==" %%a in (mods\%modfoldernormal%\sfmi.ini) do (
+  for /f "tokens=1,2 delims==" %%a in (%worklocation%mods\%modfoldernormal%\sfmi.ini) do (
   if /I %%a==custominstallbat set custombat=%%b
 )
 ) else (
@@ -181,18 +237,18 @@ set custombat=
 )
 
 
-  for /f "tokens=1,2 delims==" %%a in (mods\%modfoldernormal%\mod.ini) do (
+  for /f "tokens=1,2 delims==" %%a in (%worklocation%mods\%modfoldernormal%\mod.ini) do (
   if /I %%a==title set title=%%b
 )
 
 )
-  for /f "tokens=1,2 delims==" %%a in (mods\%modfoldernormal%\mod.ini) do (
+  for /f "tokens=1,2 delims==" %%a in (%worklocation%mods\%modfoldernormal%\mod.ini) do (
   if /I %%a==author set author=%%b
 )
 
 :confirmnormal
 
-if not exist mods\%modfoldernormal% (
+if not exist %worklocation%mods\%modfoldernormal% (
   cls
   echo Mod folder does not exist
   echo Maybe you added a space in the name?
@@ -200,7 +256,7 @@ if not exist mods\%modfoldernormal% (
   goto normal
 )
 
-if not exist mods\%modfoldernormal%\mod.ini (
+if not exist %worklocation%mods\%modfoldernormal%\mod.ini (
   cls
   echo Not a valid mod folder.
   echo Forgot to create mod.ini?
@@ -236,9 +292,36 @@ if /i %custom% EQU true (
   )
 
 echo --------------------------
+if exist "%worklocation%mods\%modfoldernormal%\disk\*.cpk" (
+echo CPK mod detected. Extracting files...
+for %%x in (%worklocation%mods\%modfoldernormal%\disk\*.cpk) do (
+  set "cpkinstallation=%%x"
+  goto CPKProceed
+)
+:cpkproceed
+%worklocation%packcpk %cpkinstallation%
+echo IF THIS LOOKS STUCK, DON'T DO ANYTHING! IT ISN'T!
+  if not exist "image\x64\disk\mod_installer\wars_modinstaller_%cpk%" (
+  %worklocation%packcpk ".\image\x64\disk\%cpk%.cpk"
+  rename %cpk% wars_modinstaller_%cpk%
+  move wars_modinstaller_%cpk% ".\image\x64\disk\mod_installer\" >nul
+) else (
+  echo Extracted files already found, skipping extraction...
+)
+echo --------------------------
+echo IF THIS LOOKS STUCK, DON'T DO ANYTHING! IT ISN'T!
+%worklocation%PackCPK ".\image\x64\disk\mod_installer\wars_modinstaller_%cpk%" ".\image\x64\disk\%cpk%"
+echo --------------------------
+echo %title% >> mods\SFMIModsDB.ini
+echo Done! Press any key to exit!
+pause >nul
+exit
+)
+
+
 if not exist "image\x64\disk\mod_installer\wars_modinstaller_%cpk%" (
   echo IF THIS LOOKS STUCK, DON'T DO ANYTHING! IT ISN'T!
-  packcpk ".\image\x64\disk\%cpk%.cpk"
+  %worklocation%packcpk ".\image\x64\disk\%cpk%.cpk"
   rename %cpk% wars_modinstaller_%cpk%
   move wars_modinstaller_%cpk% ".\image\x64\disk\mod_installer\" >nul
 ) else (
@@ -246,12 +329,12 @@ if not exist "image\x64\disk\mod_installer\wars_modinstaller_%cpk%" (
 )
 echo --------------------------
 echo Copying files...
-xcopy /s /y "mods\%modfoldernormal%\disk\%cpk%" ".\image\x64\disk\mod_installer\wars_modinstaller_%cpk%" >nul
+xcopy /s /y "%worklocation%mods\%modfoldernormal%\disk\%cpk%" ".\image\x64\disk\mod_installer\wars_modinstaller_%cpk%" >nul
 echo --------------------------
 echo IF THIS LOOKS STUCK, DON'T DO ANYTHING! IT ISN'T!
-PackCPK ".\image\x64\disk\mod_installer\wars_modinstaller_%cpk%" ".\image\x64\disk\%cpk%"
+%worklocation%PackCPK ".\image\x64\disk\mod_installer\wars_modinstaller_%cpk%" ".\image\x64\disk\%cpk%"
 echo --------------------------
-echo %title% >> mods\ModsDB.ini
+echo %title% >> %worklocation%mods\SFMIModsDB.ini
 echo Done! Press any key to exit!
 pause >nul
 exit
@@ -268,10 +351,10 @@ exit
 cls
 echo Currently installed mods:
 echo ---------
-if not exist "mods\modsdb.ini" (
+if not exist "%worklocation%mods\sfmimodsdb.ini" (
   echo No mods are currently installed
 ) else (
-type mods\modsdb.ini
+type %worklocation%mods\sfmimodsdb.ini
 )
 echo ---------
 echo Press any key to go back to the menu...
@@ -282,10 +365,10 @@ goto normal
 cls
 echo Currently installed mods:
 echo ---------
-if not exist "mods\modsdb.ini" (
+if not exist "%worklocation%mods\sfmimodsdb.ini" (
   echo No mods are currently installed
 ) else (
-type mods\modsdb.ini
+type mods\sfmimodsdb.ini
 )
 echo ---------
 echo This will uninstall all of your currently installed mods
@@ -307,7 +390,7 @@ del image\x64\disk\wars_patch.cpk
 ren image\x64\disk\wars_patch.cpk.backup wars_patch.cpk
 del /q "image\x64\disk\mod_installer\*"
 FOR /D %%p IN ("image\x64\disk\mod_installer\*.*") DO rmdir "%%p" /s /q
-del /q mods\modsdb.ini
+del /q %worklocation%mods\sfmimodsdb.ini
 echo.
 echo Done! Press any key to go back to the menu
 pause >nul
