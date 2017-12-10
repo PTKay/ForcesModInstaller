@@ -1,6 +1,6 @@
 @echo off
 for %%* in (.) do set foldercheck=%%~nx*
-set fmiver=1.7
+set fmiver=1.7.1
 title Sonic Forces Mod Installer %fmiver%
 
 if /I %foldercheck% EQU SonicForces goto rootfolder
@@ -212,22 +212,21 @@ cd ..
 echo ------------------------------------
 echo.
 set /p modfoldernormal=Mod folder: 
+if /i "%modfoldernormal%" EQU delete goto uninstall
+if /i "%modfoldernormal%" EQU refresh goto normal
+if /i "%modfoldernormal%" EQU check goto check
 
-if /i %modfoldernormal% EQU delete goto uninstall
-if /i %modfoldernormal% EQU refresh goto normal
-if /i %modfoldernormal% EQU check goto check
 
-
-if exist (%worklocation%mods\%modfoldernormal%\sfmi.ini) (
-  for /f "tokens=1,2 delims==" %%a in (mods\%modfoldernormal%\sfmi.ini) do (
+if exist ("%worklocation%mods\%modfoldernormal%\sfmi.ini") (
+  for /f "tokens=1,2 delims==" %%a in ("mods\%modfoldernormal%\sfmi.ini") do (
   if /I %%a==cpk set cpk=%%b
 )
 
-  for /f "tokens=1,2 delims==" %%a in (%worklocation%mods\%modfoldernormal%\sfmi.ini) do (
+  for /f "tokens=1,2 delims==" %%a in ("%worklocation%mods\%modfoldernormal%\sfmi.ini") do (
   if /I %%a==custominstall set custom=%%b
 )
 
-  for /f "tokens=1,2 delims==" %%a in (%worklocation%mods\%modfoldernormal%\sfmi.ini) do (
+  for /f "tokens=1,2 delims==" %%a in ("%worklocation%mods\%modfoldernormal%\sfmi.ini") do (
   if /I %%a==custominstallbat set custombat=%%b
 )
 ) else (
