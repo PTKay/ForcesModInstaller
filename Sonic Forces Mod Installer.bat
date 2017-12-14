@@ -1,6 +1,6 @@
 @echo off
 for %%* in (.) do set foldercheck=%%~nx*
-set fmiver=1.7.1
+set fmiver=1.7.2
 title Sonic Forces Mod Installer %fmiver%
 
 if /I %foldercheck% EQU SonicForces goto rootfolder
@@ -212,9 +212,9 @@ cd ..
 echo ------------------------------------
 echo.
 set /p modfoldernormal=Mod folder: 
-if /i "%modfoldernormal%" EQU delete goto uninstall
-if /i "%modfoldernormal%" EQU refresh goto normal
-if /i "%modfoldernormal%" EQU check goto check
+if /i %modfoldernormal% EQU delete (goto uninstall)
+if /i %modfoldernormal% EQU refresh (goto normal)
+if /i %modfoldernormal% EQU check (goto check)
 
 
 if exist ("%worklocation%mods\%modfoldernormal%\sfmi.ini") (
@@ -246,7 +246,6 @@ set custombat=
 )
 
 :confirmnormal
-
 if not exist %worklocation%mods\%modfoldernormal% (
   cls
   echo Mod folder does not exist
