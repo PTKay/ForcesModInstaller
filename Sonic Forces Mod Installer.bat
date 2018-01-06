@@ -5,13 +5,13 @@ title Sonic Forces Mod Installer %fmiver%
 
 if exist sfmidebug.bat (
 call sfmidebug.bat
-) else (
-set debug_startup=FALSE
 )
+if /i "%debug_startup%" EQU "" (goto nodebug)
 if /i %debug_startup% EQU true (goto status)
 if /i %debug_startup% EQU false (goto fmibegin)
 
 
+:nodebug
 if /I %foldercheck% EQU SonicForces goto rootfolder
 if /I %foldercheck% EQU exec goto execfolder
 if /I %foldercheck% NEQ SonicForces if /I %foldercheck% NEQ exec (
@@ -59,7 +59,6 @@ if not exist "%worklocation%CpkMaker.dll" (
 )
 
 if exist ".\build\main\projects\exec\d3d11.dll" if exist ".\build\main\projects\exec\HedgeModManager.exe" (
-  set HMMInstall=TRUE
   echo WARNING [CODE 05]
   echo ----------
   echo An instalation of the HedgeModManager code loader 
@@ -68,8 +67,6 @@ if exist ".\build\main\projects\exec\d3d11.dll" if exist ".\build\main\projects\
   echo. 
   echo Press any key to proceed anyway 
   pause >nul
-) else (
-set HMMInstall=FALSE
 )
 
 md %worklocation%mods
@@ -197,7 +194,9 @@ pause >nul
 exit
 
 :normal
+if /i "%debug_startup%" equ "" (goto normalnodebug)
 if /i %debug_startup% EQU true (goto :eof)
+:normalnodebug
 set modfoldernormal=
 md %worklocation%mods
 md .\image\x64\disk\mod_installer\
