@@ -84,5 +84,7 @@ OK//CODE=00
 Everything is working as it should!
 ```
 
+If you need any help troubleshooting, send me a Twitter message (@PTKickass) including a screenshot of the status screen!
+
 ## Credits
 - PackCPK.exe by Skyth
