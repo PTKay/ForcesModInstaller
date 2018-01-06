@@ -1,12 +1,14 @@
 @echo off
 for %%* in (.) do set foldercheck=%%~nx*
-set fmiver=1.8
+set fmiver=1.8.1
 title Sonic Forces Mod Installer %fmiver%
 
 if exist sfmidebug.bat (
 call sfmidebug.bat
+) else (
+set debug_startup=NO
 )
-if /i "%debug_startup%" EQU "" (goto nodebug)
+if /i "%debug_startup%" EQU "NO" (goto nodebug)
 if /i %debug_startup% EQU true (goto status)
 if /i %debug_startup% EQU false (goto fmibegin)
 
@@ -194,7 +196,7 @@ pause >nul
 exit
 
 :normal
-if /i "%debug_startup%" equ "" (goto normalnodebug)
+if /i "%debug_startup%" equ "NO" (goto normalnodebug)
 if /i %debug_startup% EQU true (goto :eof)
 :normalnodebug
 set modfoldernormal=
@@ -233,6 +235,7 @@ if /i "%modfoldernormal%" EQU "!delete" (goto uninstall)
 if /i "%modfoldernormal%" EQU "!refresh" (goto normal)
 if /i "%modfoldernormal%" EQU "!check" (goto check)
 if /i "%modfoldernormal%" EQU "!status" (goto status)
+if /i "%modfoldernormal%" EQU "!debug" (goto status)
 if /i "%modfoldernormal%" EQU "!exit" (exit)
 
 
@@ -417,6 +420,7 @@ set statfoldercheck=INCOMPATIBLE
 set statfoldercheck=COMPATIBLE
 )
 :://///////\\\\\\\\\\\
+set status_menu=clear
 if /i %statfoldercheck% EQU INCOMPATIBLE (
 set staterror=01
 goto stat_menu)
@@ -440,7 +444,6 @@ cls
 echo SFMI VERSION=%fmiver%
 echo DEBUG_STARTUP=%debug_startup%
 echo.
-set statcall=
 color 17
 echo|set /p=STATUS=
 if %staterror% EQU 00 (powershell write-host -foreground green OK//CODE=00)
@@ -449,6 +452,7 @@ if %staterror% EQU 02 (powershell write-host -foreground red ERROR//CODE=02)
 if %staterror% EQU 03 (powershell write-host -foreground red ERROR//CODE=03)
 if %staterror% EQU 04 (powershell write-host -foreground red ERROR//CODE=04)
 if %staterror% EQU 05 (powershell write-host -foreground yellow OK//CODE=05)
+echo TYPE !CODEINFO FOR CODE DESCRIPTION
 echo ---------
 echo HMM Instalation: %HMMInstall%
 echo Instalation Mode: %workmode% (%worklocation%)
@@ -458,25 +462,45 @@ echo CpkMaker.dll: %cpkmakerdll%
 echo PackCPK.exe: %packcpkexe%
 echo Folder Check Status: %statfoldercheck%
 echo ---------
-set /p statcall=
-if "%statcall%" EQU "" (
-color 7
-goto normal)
-if %statcall% EQU printmods (
-if not exist "%worklocation%mods\sfmimodsdb.ini" (
-  echo MODS DATABASE NON EXISTANT
-  pause >nul
-  color 7
-  goto normal
-)
-type %worklocation%mods\sfmimodsdb.ini
-pause >nul
-color 7
-goto normal
+echo INSTALLED MODS:
 ) else (
+if /i "%moddatabase%" EQU "false" (
+echo /MOD DATABASE NON EXISTANT\
+) else (
+type %worklocation%mods\sfmimodsdb.ini
+)
+set /p status_menu=
+if /i %status_menu% EQU !CODEINFO goto codeinfo
+if /i %status_menu% EQU clear (
 color 7
 goto normal
 )
+:codeinfo
+cls
+echo ERROR//CODE=01
+echo You're running the installed from an incompatible folder. Try and install it in either
+echothe "exec" folder, or in the SonicForces folder.
+echo.
+echo ERROR//CODE=02
+echo You don't have both PackCPK.exe nor CpkMaker.dll. Please put those files in the same
+echo folder as the bat installer and try again.
+echo.
+echo ERROR//CODE=03
+echo You don't have CpkMaker.dll. Please put that file in the same folder as the bat installer and
+echo try again.
+echo.
+echo ERROR//CODE=04
+echo You don't have PackCPK.exe. Please put that file in the same folder as the bat installer and
+echo try again.
+echo.
+echo OK//CODE=05
+echo You have HedgeModManager installed. The mod installer can work, but some mods may work incorrectly
+echo this way.
+echo.
+echo OK//CODE=00
+echo Everything is working as it should!
+pause >nul
+goto status
 
 :uninstall
 cls
