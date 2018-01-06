@@ -55,8 +55,7 @@ You can create a separate file called "sfmi.ini" alongside "mod.ini" with the fo
 -  *I'm having problems. How do I troubleshoot?*
 
 It's easy. You can type "!status" on the main menu to access the debug screen. There you'll find a bunch of information
-that may be usefull for troubleshooting. While on that screen, you can type "printmods" to print a list of all installed mods
-to your screen. If the script doesn't boot for any reason, use the included "sfmidebug.bat.bak" file to access the debug screen. Just remove the .bak part of the name, and run the script again (not sfmidebug.bat, the other one).
+that may be usefull for troubleshooting. If the script doesn't boot for any reason, use the included "sfmidebug.bat.bak" file to access the debug screen. Just remove the .bak part of the name, and run the script again (not sfmidebug.bat, the other one).
 
 These are the meaning of all the error codes:
 ```
