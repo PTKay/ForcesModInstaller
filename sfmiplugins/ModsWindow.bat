@@ -1,7 +1,8 @@
 @echo off
 for %%* in (.) do set modwindowfoldercheck=%%~nx*
 
-if /I %modwindowfoldercheck% NEQ SonicForces if /I %modwindowfoldercheck% NEQ exec (
+if not defined fmiver (
+  title SFMI PLUGIN
   echo ERROR
   echo ----------
   echo SFMI plugins won't work in standalone.
@@ -9,10 +10,11 @@ if /I %modwindowfoldercheck% NEQ SonicForces if /I %modwindowfoldercheck% NEQ ex
   pause >nul
   exit
 )
+
 mode con:cols=50 lines=30
 
 :begin
-title SFMI Installed Mods (You may drag this window)
+title SFMI Installed Mods [PLUGIN]
 cls
 echo Currently installed mods:
 echo ---------
