@@ -1,16 +1,61 @@
 @echo off
 for %%* in (.) do set foldercheck=%%~nx*
-set fmiver=1.8.1
+set fmiver=1.9
 title Sonic Forces Mod Installer %fmiver%
 
-if exist sfmidebug.bat (
-call sfmidebug.bat
-) else (
-set debug_startup=NO
+rename sfmi.config sfmi.bat
+call sfmi.bat
+rename sfmi.bat sfmi.config
+if /i %InstalledModsWindow% EQU True if not exist ".\sfmiplugins\ModsWindow.bat" (
+set InstalledModsWindow=False
 )
-if /i "%debug_startup%" EQU "NO" (goto nodebug)
+
+
+if /i %debug_startup% EQU true (goto runasdebug)
+if /i %debug_startup% EQU false (goto nodebug)
+
+
+:runasdebug
+if /I %foldercheck% EQU SonicForces goto debugrootfolder
+if /I %foldercheck% EQU exec goto debugexecfolder
+if /I %foldercheck% NEQ SonicForces if /I %foldercheck% NEQ exec (
+set worklocation=INCOMPATIBLE\
+set workmode=NONE
+goto debugend
+)
+
+
+:debugexecfolder
+cd ..
+cd ..
+cd ..
+cd ..
+title Sonic Forces Mod Installer %fmiver% (Exec Folder Mode)
+set worklocation=.\build\main\projects\exec\
+set workmode=EXEC
+goto debugend
+::Game Root Folder Mode
+:debugrootfolder
+set worklocation=
+title Sonic Forces Mod Installer %fmiver% (Root Folder Mode)
+set workmode=ROOT
+goto debugend
+
+
+:debugend
+cls
+set debug_startup=TRUE
+echo You're starting SFMI in debug mode...
+echo Proceed?
+set /p answer=(Y/N)
+if /i %answer% EQU Y (goto debugproceed)
+if /i %answer% EQU N (set debug_startup=FALSE)
+
+:debugproceed
+cls
 if /i %debug_startup% EQU true (goto status)
 if /i %debug_startup% EQU false (goto fmibegin)
+
 
 
 :nodebug
@@ -60,7 +105,7 @@ if not exist "%worklocation%CpkMaker.dll" (
   exit
 )
 
-if exist ".\build\main\projects\exec\d3d11.dll" if exist ".\build\main\projects\exec\HedgeModManager.exe" (
+if exist ".\build\main\projects\exec\d3d11.dll" if exist ".\build\main\projects\exec\HedgeModManager.exe" if /i %SkipHMMNotice% EQU False (
   echo WARNING [CODE 05]
   echo ----------
   echo An instalation of the HedgeModManager code loader 
@@ -205,10 +250,20 @@ md .\image\x64\disk\mod_installer\
 echo Do not delete these folders! These serve as cache for the mod installer! > .\image\x64\disk\mod_installer\readme.txt
 cls
 if not exist "mods" (md mods)
+
+if "%InstalledModsWindow%" EQU "" (
+start %worklocation%\sfmiplugins\ModsWindow.bat
+set InstalledModsWindow=false
+)
+
+if /i "%InstalledModsWindow%" EQU "True" (
+start %worklocation%\sfmiplugins\ModsWindow.bat
+set InstalledModsWindow=false
+)
 echo Type the mod folder to install that mod
 echo Type "!delete" to uninstall all currently installed mods
 echo Type "!refresh" to refresh the mod list
-echo Type "!check" to check currently installer mods
+echo Type "!check" to check currently installed mods
 echo.
 echo Mods available in the "mods" folder
 echo ------------------------------------
@@ -232,6 +287,7 @@ echo.
 set /p modfoldernormal=Mod folder: 
 if /i "%modfoldernormal%" EQU "" (goto normal) 
 if /i "%modfoldernormal%" EQU "!delete" (goto uninstall)
+if /i "%modfoldernormal%" EQU "!uninstall" (goto uninstall)
 if /i "%modfoldernormal%" EQU "!refresh" (goto normal)
 if /i "%modfoldernormal%" EQU "!check" (goto check)
 if /i "%modfoldernormal%" EQU "!status" (goto status)
@@ -442,10 +498,12 @@ goto stat_menu)
 :stat_menu
 cls
 echo SFMI VERSION=%fmiver%
+echo CONFIG FILE VERSION=%cfgversion%
 echo DEBUG_STARTUP=%debug_startup%
 echo.
 color 17
 echo|set /p=STATUS=
+if "%staterror%" EQU "" (powershell write-host -foreground red UNKNOWN_ERROR)
 if %staterror% EQU 00 (powershell write-host -foreground green OK//CODE=00)
 if %staterror% EQU 01 (powershell write-host -foreground red ERROR//CODE=01)
 if %staterror% EQU 02 (powershell write-host -foreground red ERROR//CODE=02)
@@ -509,7 +567,7 @@ echo ---------
 if not exist "%worklocation%mods\sfmimodsdb.ini" (
   echo No mods are currently installed
 ) else (
-type mods\sfmimodsdb.ini
+type "%worklocation%mods\sfmimodsdb.ini"
 )
 echo ---------
 echo This will uninstall all of your currently installed mods
