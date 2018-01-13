@@ -55,7 +55,7 @@ You can create a separate file called "sfmi.ini" alongside "mod.ini" with the fo
 -  *I'm having problems. How do I troubleshoot?*
 
 It's easy. You can type "!status" or "!debug" on the main menu to access the debug screen. There you'll find a bunch of information
-that may be usefull for troubleshooting. If the script doesn't boot for any reason, just change "IsDebugStart" to True in the sfmidebug.config file.
+that may be usefull for troubleshooting. If the script doesn't boot for any reason, just change "IsDebugStart" to True in the sfmi.config file.
 These are the meaning of all the error codes:
 ```
 ERROR//CODE=01
