@@ -1,4 +1,4 @@
-## Sonic Forces Mod Installer
+# Sonic Forces Mod Installer
 
 Sonic Forces Mod Installer simplifies the process of installing Sonic Forces mods by doing the extraction and repacking
 of wars_patch.cpk (or other cpk's if specified by the mod) for you!
