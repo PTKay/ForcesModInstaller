@@ -1,8 +1,16 @@
 @echo off
 for %%* in (.) do set foldercheck=%%~nx*
-set fmiver=1.9
+set fmiver=1.9.3
 title Sonic Forces Mod Installer %fmiver%
 
+if not exist sfmi.config (
+echo ERROR
+echo -----------------
+echo Could not find sfmi.config. Please extract all contents of the
+echo package to the same folder and try again...
+pause >nul
+exit
+)
 rename sfmi.config sfmi.bat
 call sfmi.bat
 rename sfmi.bat sfmi.config
@@ -10,20 +18,18 @@ if /i %InstalledModsWindow% EQU True if not exist ".\sfmiplugins\ModsWindow.bat"
 set InstalledModsWindow=False
 )
 
-
 if /i %debug_startup% EQU true (goto runasdebug)
 if /i %debug_startup% EQU false (goto nodebug)
 
 
 :runasdebug
-if /I %foldercheck% EQU SonicForces goto debugrootfolder
-if /I %foldercheck% EQU exec goto debugexecfolder
-if /I %foldercheck% NEQ SonicForces if /I %foldercheck% NEQ exec (
+if /I "%foldercheck%" EQU "SonicForces" goto debugrootfolder
+if /I "%foldercheck%" EQU "exec" goto debugexecfolder
+if /I "%foldercheck%" NEQ "SonicForces" if /I "%foldercheck%" NEQ "exec" (
 set worklocation=INCOMPATIBLE\
 set workmode=NONE
 goto debugend
 )
-
 
 :debugexecfolder
 cd ..
@@ -59,9 +65,9 @@ if /i %debug_startup% EQU false (goto fmibegin)
 
 
 :nodebug
-if /I %foldercheck% EQU SonicForces goto rootfolder
-if /I %foldercheck% EQU exec goto execfolder
-if /I %foldercheck% NEQ SonicForces if /I %foldercheck% NEQ exec (
+if /I "%foldercheck%" EQU "SonicForces" (goto rootfolder)
+if /I "%foldercheck%" EQU "exec" (goto execfolder)
+if /I "%foldercheck%" NEQ "SonicForces" if /I "%foldercheck%" NEQ "exec" (
   echo ERROR [CODE 01]
   echo ----------
   echo This bat file/mod folder isn't in a compatible folder.
@@ -465,12 +471,22 @@ set cpkmakerdll=FALSE
 set cpkmakerdll=TRUE
 )
 
+if exist .\build\main\projects\exec\steamclient64.dll (
+set crackedcopy=TRUE
+) else (
+set crackedcopy=FALSE
+)
+
+if exist .\build\main\projects\exec\steamclient64.dll if exist .\build\main\projects\exec\cpy.ini (
+set crackedcopy=TRUE [WITH INI]
+)
+
 if not exist %worklocation%PackCPK.exe (
 set PackCPKexe=FALSE
 ) else (
 set PackCPKexe=TRUE
 )
-if /I %foldercheck% NEQ SonicForces if /I %foldercheck% NEQ exec (
+if /I "%foldercheck%" NEQ "SonicForces" if /I "%foldercheck%" NEQ "exec" (
 set statfoldercheck=INCOMPATIBLE
 ) else (
 set statfoldercheck=COMPATIBLE
@@ -514,11 +530,12 @@ echo TYPE !CODEINFO FOR CODE DESCRIPTION
 echo ---------
 echo HMM Instalation: %HMMInstall%
 echo Instalation Mode: %workmode% (%worklocation%)
-echo Mod Database: %moddatabase%
+echo SFMI Mod Database: %moddatabase%
 echo Backup CPK: %backupstate%
 echo CpkMaker.dll: %cpkmakerdll%
 echo PackCPK.exe: %packcpkexe%
-echo Folder Check Status: %statfoldercheck%
+echo Folder Check Status: %statfoldercheck% [%foldercheck%]
+echo Cracked Copy: %crackedcopy%
 echo ---------
 echo INSTALLED MODS:
 ) else (
@@ -537,7 +554,7 @@ goto normal
 cls
 echo ERROR//CODE=01
 echo You're running the installed from an incompatible folder. Try and install it in either
-echothe "exec" folder, or in the SonicForces folder.
+echo the "exec" folder, or in the SonicForces folder.
 echo.
 echo ERROR//CODE=02
 echo You don't have both PackCPK.exe nor CpkMaker.dll. Please put those files in the same
