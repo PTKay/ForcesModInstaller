@@ -4,13 +4,16 @@ set fmiver=1.9.3
 title Sonic Forces Mod Installer %fmiver%
 
 if not exist sfmi.config (
-echo ERROR
-echo -----------------
-echo Could not find sfmi.config. Please extract all contents of the
-echo package to the same folder and try again...
-pause >nul
-exit
+echo set cfgversion=1.9.1 >>sfmi.config
+
+echo ::DEBUG:: >>sfmi.config
+echo set Debug_Startup=False >>sfmi.config
+echo set SkipHMMNotice=True >>sfmi.config
+
+echo ::PLUGINS:: >>sfmi.config
+echo set InstalledModsWindow=False >>sfmi.config
 )
+
 rename sfmi.config sfmi.bat
 call sfmi.bat
 rename sfmi.bat sfmi.config
