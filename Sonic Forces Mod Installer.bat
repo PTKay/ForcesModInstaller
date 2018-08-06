@@ -1,6 +1,7 @@
 @echo off
+cd /d "%~dp0"
 for %%* in (.) do set foldercheck=%%~nx*
-set fmiver=1.9.3
+set fmiver=1.9.6
 title Sonic Forces Mod Installer %fmiver%
 
 if not exist sfmi.config (
@@ -68,6 +69,7 @@ if /i %debug_startup% EQU false (goto fmibegin)
 
 
 :nodebug
+if /I "%foldercheck%" EQU "system32" goto noadmin
 if /I "%foldercheck%" EQU "SonicForces" (goto rootfolder)
 if /I "%foldercheck%" EQU "exec" (goto execfolder)
 if /I "%foldercheck%" NEQ "SonicForces" if /I "%foldercheck%" NEQ "exec" (
@@ -223,7 +225,7 @@ echo --------------------------
 echo IF THIS LOOKS STUCK, DON'T DO ANYTHING! IT ISN'T!
 %worklocation%PackCPK ".\image\x64\disk\mod_installer\wars_modinstaller_%cpk%" ".\image\x64\disk\%cpk%"
 echo --------------------------
-echo %title% >> mods\SFMIModsDB.ini
+echo %title% >> %worklocation%mods\SFMIModsDB.ini
 echo Done! Press any key to exit!
 pause >nul
 exit
@@ -244,12 +246,28 @@ echo --------------------------
 echo IF THIS LOOKS STUCK, DON'T DO ANYTHING! IT ISN'T!
 %worklocation%PackCPK ".\image\x64\disk\mod_installer\wars_modinstaller_%cpk%" ".\image\x64\disk\%cpk%"
 echo --------------------------
-echo %title% >> mods\SFMIModsDB.ini
+echo %title% >> %worklocation%mods\SFMIModsDB.ini
 echo Done! Press any key to exit!
 pause >nul
 exit
 
 :normal
+cls
+echo Loading mod list...
+if /i %foldercheck% equ SonicForces (
+cd mods
+for /r %%a in (.) do @if exist "%%~fa\mod.ini" echo %%~nxa >nul
+cd ..
+)
+if /i %foldercheck% equ exec (
+cd %worklocation%mods
+for /r %%a in (.) do @if exist "%%~fa\mod.ini" echo %%~nxa >nul
+cd ..
+cd ..
+cd ..
+cd ..
+cd ..
+)
 if /i "%debug_startup%" equ "NO" (goto normalnodebug)
 if /i %debug_startup% EQU true (goto :eof)
 :normalnodebug
@@ -259,7 +277,6 @@ md .\image\x64\disk\mod_installer\
 echo Do not delete these folders! These serve as cache for the mod installer! > .\image\x64\disk\mod_installer\readme.txt
 cls
 if not exist "mods" (md mods)
-
 if "%InstalledModsWindow%" EQU "" (
 start %worklocation%\sfmiplugins\ModsWindow.bat
 set InstalledModsWindow=false
@@ -303,7 +320,6 @@ if /i "%modfoldernormal%" EQU "!status" (goto status)
 if /i "%modfoldernormal%" EQU "!debug" (goto status)
 if /i "%modfoldernormal%" EQU "!exit" (exit)
 
-
 if exist (%worklocation%mods\%modfoldernormal%\sfmi.ini) (
   for /f "tokens=1,2 delims==" %%a in (%worklocation%mods\%modfoldernormal%\sfmi.ini) do (
   if /I %%a==cpk set cpk=%%b
@@ -336,16 +352,17 @@ set custombat=
 set confirm=
 if not exist %worklocation%mods\%modfoldernormal% (
   cls
-  echo Mod folder does not exist
-  echo Maybe you added a space in the name?
+  echo Could not find the mod's folder.
+  echo ----------------------------------
+  echo Please check if the folder has any space in the 
+  echo name, and if so, please remove it.
   pause >nul
   goto normal
 )
 
 if not exist %worklocation%mods\%modfoldernormal%\mod.ini (
   cls
-  echo Not a valid mod folder.
-  echo Forgot to create mod.ini?
+  echo Could not detect mod.ini in the mod's folder.
   pause >nul
   goto normal
 )
@@ -399,7 +416,7 @@ echo --------------------------
 echo IF THIS LOOKS STUCK, DON'T DO ANYTHING! IT ISN'T!
 %worklocation%PackCPK ".\image\x64\disk\mod_installer\wars_modinstaller_%cpk%" ".\image\x64\disk\%cpk%"
 echo --------------------------
-echo %title% >> mods\SFMIModsDB.ini
+echo %title% >> %worklocation%mods\SFMIModsDB.ini
 echo Done! Press any key to exit!
 pause >nul
 exit
@@ -614,5 +631,15 @@ echo.
 echo Done! Press any key to go back to the menu
 pause >nul
 goto normal
+
+
+:noadmin
+  cls
+  echo ERROR
+  echo ----------
+  echo This script cannot be run with administrator privileges!
+  pause >nul
+  exit
+
 
 :end
