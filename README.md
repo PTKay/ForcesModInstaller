@@ -5,9 +5,8 @@ of wars_patch.cpk (or other cpk's if specified by the mod) for you!
 
 It comes with a simple command line GUI-like interface that the end user can understand easily. It also automaticaly backups your original cpk file aswell, so no worries about corrupting your game files!
 
-NOTE: Use this only as a second option, since HedgeModManager is always your best bet for loading mods into the game.
-In any case, if HedgeModManager isn't working, you can use this mod installer
-
+NOTE: Use this only as a second option, since [HedgeModManager](https://github.com/thesupersonic16/HedgeModManager) is your best bet for loading mods into the game.
+In any case, if that isn't working, you can use this mod installer.
 
 ## FAQ
 - *How do I use this?*
@@ -83,6 +82,9 @@ Everything is working as it should!
 ```
 
 If you need any help troubleshooting, send me a Twitter message (@PTKickass) including a screenshot of the status screen!
+
+- *Why is this a BAT file?*
+Good question. This was made back when I had no knowledge of any programming language, and the only thing I knew was the language used in these files. This means that the file itself is a complete mess due to lack of code organization knowledge. If you want to look at the code, proceed with caution.
 
 ## Credits
 - PackCPK.exe by Skyth
